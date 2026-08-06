@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\ArtistaController;
 use Illuminate\Support\Facades\Route;
 
@@ -111,9 +112,15 @@ Route::get('/type-error', function (){
     // A instanciação abaixo carregará uma paǵina indicando um TypeError
     // o terceiro parâmetro passado para o construtor espera um valor int e eu estou passando uma string
     $artista = new Artista("Michael Jackson", "Pop", "1Bilhão+");
-   
+
     return response()->json($artista);
 });
 
+
+// Rotas de Artistas
 Route::get("/artistas", [ArtistaController::class, 'index']);
 Route::get("/artistas/{id}", [ArtistaController::class, 'show']);
+
+// Rotas de Albums
+Route::get('/albums', [AlbumController::class, 'index']);
+Route::get('/albums/{id}', [AlbumController::class, 'show']); //Se o id não tiver as chaves, será interpretado como um endpoint
