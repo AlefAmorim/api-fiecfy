@@ -123,8 +123,8 @@ Route::get("/artistas", [ArtistaController::class, 'index']);
 Route::get("/artistas/{id}", [ArtistaController::class, 'show']);
 
 // Rotas de Albums
-Route::get('/albums', [AlbumController::class, 'index']);
-Route::get('/albums/{id}', [AlbumController::class, 'show']); //Se o id não tiver as chaves, será interpretado como um endpoint
+Route::get('/albuns', [AlbumController::class, 'index']);
+Route::get('/albuns/{id}', [AlbumController::class, 'show']); //Se o id não tiver as chaves, será interpretado como um endpoint
 
 // Rotas de muscas 
 Route::get('/musicas', [MusicaController::class, 'index']);
