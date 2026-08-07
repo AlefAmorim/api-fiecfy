@@ -4,8 +4,6 @@ use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\ArtistaController;
 use App\Http\Controllers\MusicaController;
 use Illuminate\Support\Facades\Route;
-
-
 class FaixaMusical {
     public string $titulo;
     public string $artista;
@@ -125,6 +123,3 @@ Route::get("/artistas/{id}", [ArtistaController::class, 'show']);
 // Rotas de Albums
 Route::get('/albuns', [AlbumController::class, 'index']);
 Route::get('/albuns/{id}', [AlbumController::class, 'show']); //Se o id não tiver as chaves, será interpretado como um endpoint
-
-// Rotas de muscas 
-Route::get('/musicas', [MusicaController::class, 'index']);

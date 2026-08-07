@@ -19,4 +19,17 @@ class MusicaController extends Controller
 
         return response()->json($musicas);
     }
+
+    public function store(Request $request){
+        // recebendo os dados do body da requisição
+        $tituloRecebido = $request->input("titulo");
+        $artistaRecebido = $request->input("artista");
+
+        return response()->json([
+            'sucesso' => true,
+            'mensagem' => "A música '$tituloRecebido' de '$artistaRecebido' foi salva!",
+            'dados_recebidos' => $request->all(),
+        ], 201);
+
+    }
 }
