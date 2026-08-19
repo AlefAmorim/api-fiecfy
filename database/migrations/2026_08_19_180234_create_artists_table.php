@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
-        Schema::create('artistas', function (Blueprint $table) {
+        Schema::create('artists', function (Blueprint $table) {
             $table->id();
-
             //Coluna obrigatória
             $table->string("name");
             $table->integer("monthly_listeners")->default(0);
@@ -22,12 +20,10 @@ return new class extends Migration
             //Coluna opcional de Gênero
             $table->string("genre")->nullable();
 
-            // Foto de perfil 
+            // Foto de perfil
             $table->string("profile_pic_url")->default("default.jpg");
-            
-            // Cria created_at e updated
-            $table->timestamps();
 
+            $table->timestamps();
         });
     }
 
@@ -36,7 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
-        Schema::dropIfExists("artistas");
+        Schema::dropIfExists('artists');
     }
 };
