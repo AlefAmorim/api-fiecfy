@@ -1,7 +1,13 @@
 <?php
+/* 
+    Este Arquivo não é utilizado neste projeto!
+    Foi utilizado nas aulas iniciais, para fins introdutórios
+    O front-end da aplicação é feito em React + TailwindCSS
+    A parte utilizada está localizada no api.php
+*/
 
 use App\Http\Controllers\AlbumController;
-use App\Http\Controllers\ArtistaController;
+use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\MusicaController;
 use Illuminate\Support\Facades\Route;
 class FaixaMusical {
@@ -117,8 +123,8 @@ Route::get('/type-error', function (){
 
 
 // Rotas de Artistas
-Route::get("/artistas", [ArtistaController::class, 'index']);
-Route::get("/artistas/{id}", [ArtistaController::class, 'show']);
+Route::get("/artistas", [ArtistController::class, 'index']);
+Route::get("/artistas/{id}", [ArtistController::class, 'show']);
 
 // Rotas de Albums
 Route::get('/albuns', [AlbumController::class, 'index']);

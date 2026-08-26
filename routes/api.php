@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ArtistaController;
+use App\Http\Controllers\ArtistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MusicaController;
 use App\Http\Controllers\PlaylistController;
@@ -17,9 +17,9 @@ Route::prefix('playlists')->group(function(){
 });
 
 Route::prefix('artists')->group(function(){
-    Route::get('/', [ArtistaController::class, 'index']);
-    Route::get('/search-artist/{id}', [ArtistaController::class, 'show']);
-    Route::patch('/update-artist/{id}', [ArtistaController::class, 'update']);
-    Route::delete('/delete-artist/{id}', [ArtistaController::class, 'destroy']);
-    Route::post("/create-artist", [ArtistaController::class, 'store']);
+    Route::get('/', [ArtistController::class, 'index']);
+    Route::get('/search-artist/{id}', [ArtistController::class, 'show']);
+    Route::patch('/update-artist/{id}', [ArtistController::class, 'update']);
+    Route::delete('/delete-artist/{id}', [ArtistController::class, 'destroy']);
+    Route::post("/create-artist", [ArtistController::class, 'store']);
 });

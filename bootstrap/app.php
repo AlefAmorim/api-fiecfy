@@ -13,16 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withExceptions(function (Exceptions $exceptions) : void {
-        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
-            if($request->is('api/*'))
-                {
-
-                    return response()->json([
-                        'message' => 'Registro não encontrado'
-                    ], 404);
-                }
-        });
+    ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->dontReportDuplicates(); // Faz com que a mesma instância de uma Exceção não seja lançada(throw) duas vezes
     })
     ->withMiddleware(function (Middleware $middleware): void {
         //
