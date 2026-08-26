@@ -17,7 +17,7 @@ class AlbumController extends Controller
         try {
             $albums = Album::all(); // Retorna  todos os registros da tabela
 
-            return response()->json(['message'=>'Albums listados com sucesso!', $albums],200);
+            return response()->json( $albums,200);
         } catch(Exception $ex){
             return response()->json(['erro'=>$this->messageInternalServerError],500);
         }
@@ -27,7 +27,7 @@ class AlbumController extends Controller
         try {
             $album = Album::findOrFail($id);
 
-            return response()->json(['message' => 'Almbum encontrado!', $album], 200);
+            return response()->json($album, 200);
         }catch(Exception $ex) {
             if($ex instanceof ModelNotFoundException) {
                 return response()->json(['erro' => 'Album não encontrado!'], 404);
@@ -39,9 +39,9 @@ class AlbumController extends Controller
     public function store(Request $request) : JsonResponse {
         try {
             Artist::findOrFail($request->input("artist_id")); // Verifica se o artista existe
-            Album::create($request->all());
+            $album = Album::create($request->all());
 
-            return response()->json(['message' => 'Album adicionado com sucesso!'], 201);
+            return response()->json(['message' => 'Album adicionado com sucesso!', $album], 201);
         }catch(Exception $ex) {
             // Tratamento caso haja algum campo obrigatório faltando
             if($ex->getCode() == "HY000"){ 
@@ -61,7 +61,7 @@ class AlbumController extends Controller
             $album = Album::findOrFail($id);
             $album->update($request->all());
 
-            return response()->json(['message'=>'Album atualizado com sucesso!'], 200);
+            return response()->json(['message'=>'Album atualizado com sucesso!', $album], 200);
         }catch(Exception $ex) {
             if($ex->getCode() == "HY000"){ 
                 return response()->json(['erro'=> "Preencha os dados obrigatórios!"], 400);
