@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string("title");
             $table->integer("duration_seconds");
             $table->boolean("is_explicit")->default(false);
+            $table->integer("track_number")->default(1);
+            $table->string("audio_path")->nullable();
 
             $table->timestamps();
         });
