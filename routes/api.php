@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\ArtistController;
+use App\Http\Controllers\GenreController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MusicaController;
 use App\Http\Controllers\PlaylistController;
@@ -31,4 +32,8 @@ Route::prefix('albums')->group(function () {
     Route::get('/list-album/{id}', [AlbumController::class, 'show']);
     Route::patch('/update-album/{id}', [AlbumController::class, 'update']);
     Route::delete('/delete-album/{id}', [AlbumController::class, 'destroy']);
+});
+
+Route::prefix('genres')->group(function() {
+    Route::post("/create-genre", [GenreController::class, 'store']);
 });
