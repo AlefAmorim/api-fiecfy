@@ -27,7 +27,7 @@ class ArtistController extends Controller
     // Método show: Retorna o item buscado por id
     public function show(int $id) : JsonResponse {
         try {
-            $artista = Artist::findOrFail($id);
+            $artista = Artist::with("albums")->findOrFail($id);
             return response()->json($artista, 200);
         }catch(Exception $err) {
             return response()->json(['erro' => $this->messageInternalServerError], 500);

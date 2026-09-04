@@ -4,12 +4,12 @@ use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\GenreController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MusicaController;
 use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\SongsController;
 
 Route::prefix('musicas')->group(function(){
-    Route::post('/armazenar', [MusicaController::class, 'store']);
-    Route::get('/', [MusicaController::class, 'index']);
+    Route::post('/armazenar', [SongsController::class, 'store']);
+    Route::get('/', [SongsController::class, 'index']);
 });
 
 Route::prefix('playlists')->group(function(){

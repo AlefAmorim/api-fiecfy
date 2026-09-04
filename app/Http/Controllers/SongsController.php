@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use FaixaMusical;
 use Illuminate\Http\Request;
 
-class MusicaController extends Controller
+class SongsController extends Controller
 {
     public function index() {
         $musicas = [
