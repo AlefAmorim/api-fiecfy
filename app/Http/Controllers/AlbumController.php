@@ -25,7 +25,7 @@ class AlbumController extends Controller
 
     public function show(int $id) : JsonResponse {
         try {
-            $album = Album::findOrFail($id);
+            $album = Album::with('songs')->findOrFail($id);
 
             return response()->json($album, 200);
         }catch(Exception $ex) {

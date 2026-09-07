@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Song;
+use Exception;
 use FaixaMusical;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SongsController extends Controller
@@ -20,16 +24,15 @@ class SongsController extends Controller
         return response()->json($musicas);
     }
 
-    public function store(Request $request){
-        // recebendo os dados do body da requisição
-        $tituloRecebido = $request->input("titulo");
-        $artistaRecebido = $request->input("artista");
-
-        return response()->json([
-            'sucesso' => true,
-            'mensagem' => "A música '$tituloRecebido' de '$artistaRecebido' foi salva!",
-            'dados_recebidos' => $request->all(),
-        ], 201);
-
+    public function store(Request $request) : JsonResponse {
+        try {
+            $song = Song::create($request->all());
+            return response()->json(["mensagem" => "Musica criada com sucesso!"]);
+        }catch(Exception $e){
+            if($e instanceof ModelNotFoundException){
+                return response()->json(["erro"=>"Album não encontrado!"], 404);
+                }
+                return response()->json(["erro"=>"Falha ao criar musica!"], 404);
+        }
     }
 }

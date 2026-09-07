@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Playlist;
+use Exception;
 use FaixaMusical;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class PlaylistController extends Controller
@@ -32,19 +35,37 @@ class PlaylistController extends Controller
             ]
         ]; 
     }
+    public function addSong(Request $request, int $id){
+        try {
+            echo $request->song_id;
+            $playlist = Playlist::findOrFail($id);
+            $playlist->songs()->attach($request->song_id);
 
+            return response()->json(["mensagem" => "Musica adicionada com sucesso!"], 201);
+        }catch(Exception $e){
+            echo $e;
+            if($e instanceof ModelNotFoundException) {
+                return response()->json(["erro" => "Playlist não encontrada!"], 404);
+            }
+            return response()->json(["erro" => "Falha ao adicionar musica na playlist!"], 500);
+        }
+    }
     public function index() {
         return response()->json(self::$playlistMock);
     }
 
     public function store(Request $request){
-        $nome = $request->input('nome_playlist');
+        try {
+            $playlist = Playlist::create($request->all());
+            $nome = $playlist->name;
 
-        return response()->json([
-            'status' => 'sucesso',
+            return response()->json([
             'mensagem' => "Playlist '$nome' criada com sucesso!",
-            "dados" => $request->all()
+            "dados" => $playlist
         ], 201);
+        }catch(Exception $e) {
+            return response()->json(['mensagem' => "Erro ao criar playlist!"], 500);
+        }
     }
 
     public function destroy($id) {

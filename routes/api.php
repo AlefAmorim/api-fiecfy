@@ -7,20 +7,21 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\SongsController;
 
-Route::prefix('musicas')->group(function(){
-    Route::post('/armazenar', [SongsController::class, 'store']);
-    Route::get('/', [SongsController::class, 'index']);
+Route::prefix('songs')->group(function(){
+    Route::post('/create-song', [SongsController::class, 'store']);
+    Route::get('/list-songs', [SongsController::class, 'index']);
 });
 
 Route::prefix('playlists')->group(function(){
-    Route::post('/criar', [PlaylistController::class, 'store']);
-    Route::get('/', [PlaylistController::class, 'index']);
+    Route::post('/create-playlist', [PlaylistController::class, 'store']);
+    Route::get('/list-playlists', [PlaylistController::class, 'index']);
+    Route::post('/add-song/{id}', [PlaylistController::class, 'addSong']);
     Route::delete('/delete/{id}', [PlaylistController::class, 'destroy']);
 });
 
 Route::prefix('artists')->group(function(){
     Route::post("/create-artist", [ArtistController::class, 'store']);
-    Route::get('/', [ArtistController::class, 'index']);
+    Route::get('/list-artists', [ArtistController::class, 'index']);
     Route::get('/search-artist/{id}', [ArtistController::class, 'show']);
     Route::patch('/update-artist/{id}', [ArtistController::class, 'update']);
     Route::delete('/delete-artist/{id}', [ArtistController::class, 'destroy']);
