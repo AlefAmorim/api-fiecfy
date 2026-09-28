@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artist;
+use Error;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -30,6 +31,9 @@ class ArtistController extends Controller
             $artista = Artist::with("albums")->findOrFail($id);
             return response()->json($artista, 200);
         }catch(Exception $err) {
+            if($err instanceof ModelNotFoundException){
+                return response()->json(['erro' => "Artista não encontrado!"], 404);
+            }
             return response()->json(['erro' => $this->messageInternalServerError], 500);
         }
     }
