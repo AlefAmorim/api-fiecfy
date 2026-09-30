@@ -1,11 +1,16 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\GenreController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\SongsController;
+use App\Http\Controllers\UserController;
+
+Route::prefix("auth")->group(function () {
+    Route::post("/register", [UserController::class, "store"]);
+});
 
 Route::prefix('songs')->group(function(){
     Route::post('/create-song', [SongsController::class, 'store']);
