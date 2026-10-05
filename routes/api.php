@@ -3,14 +3,25 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\ArtistController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\SongsController;
 use App\Http\Controllers\UserController;
+use Illuminate\Http\Request;
 
 Route::prefix("auth")->group(function () {
-    Route::post("/register", [UserController::class, "store"]);
+    Route::post("/register", [AuthController::class, "register"]);
+    Route::post("/login", [AuthController::class, "login"]);
 });
+
+Route::get("/teste", function (Request $request) {
+    // $tkn = $request->user()->createToken($request->token_name);
+
+    return response()->json([
+        "user" => $request->user()
+    ], 200);
+})->middleware('auth:sanctum');
 
 Route::prefix('songs')->group(function(){
     Route::post('/create-song', [SongsController::class, 'store']);
