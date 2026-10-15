@@ -8,6 +8,7 @@ use App\Http\Controllers\GenreController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\SongsController;
 use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 Route::prefix("auth")->group(function () {
@@ -16,12 +17,15 @@ Route::prefix("auth")->group(function () {
 });
 
 Route::get("/teste", function (Request $request) {
-    // $tkn = $request->user()->createToken($request->token_name);
+    // $tkn = $request->user()->createToken("");
+    $tkn = User::findOrFail(1)->createToken("meu_tkn");
+
 
     return response()->json([
-        "user" => $request->user()
+        "user" => $request->user(),
+        "tkn" => $tkn
     ], 200);
-})->middleware('auth:sanctum');
+});
 
 Route::prefix('songs')->group(function(){
     Route::post('/create-song', [SongsController::class, 'store']);
