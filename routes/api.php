@@ -17,6 +17,7 @@ Route::prefix("auth")->group(function () {
     Route::post("/login", [AuthController::class, "login"]);
 });
 
+// Gera token com todas as permissões/habilidades
 Route::get("/gerar-token", function (Request $request) {
     $tkn = User::findOrFail(1)->createToken("meu_tkn");
 
@@ -36,7 +37,7 @@ Route::prefix('artists')->group(function(){
 
 Route::prefix('playlists')->group(function(){
     Route::post('/create-playlist', [PlaylistController::class, 'store']);
-    Route::get('/list-playlists', [PlaylistController::class, 'index'])->middleware("auth:sanctum");
+    Route::get('/list-playlists', [PlaylistController::class, 'index'])->middleware(["auth:sanctum", "ability:admin"]);
     Route::post('/add-song/{id}', [PlaylistController::class, 'addSong']);
     Route::delete('/delete/{id}', [PlaylistController::class, 'destroy']);
 });
@@ -56,4 +57,24 @@ Route::prefix('albums')->group(function () {
 
 Route::prefix('genres')->group(function() {
     Route::post("/create-genre", [GenreController::class, 'store']);
+});
+
+//Gera token com a permissão/habilidade de usuário
+Route::get("/gerar-token-user", function (Request $request) {
+    $tkn = User::findOrFail(1)->createToken("meu_tkn", ["user"]);
+
+    return response()->json([
+        "user" => $request->user(),
+        "tkn" => $tkn->plainTextToken
+    ], 200);
+});
+
+//Gera token com a permissão/habilidade de admin
+Route::get("/gerar-token-admin", function (Request $request) {
+    $tkn = User::findOrFail(1)->createToken("meu_tkn", ["admin"]);
+
+    return response()->json([
+        "user" => $request->user(),
+        "tkn" => $tkn->plainTextToken
+    ], 200);
 });
