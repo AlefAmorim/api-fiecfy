@@ -28,7 +28,7 @@ Route::get("/gerar-token", function (Request $request) {
 
 Route::prefix('artists')->group(function(){
     Route::post("/create-artist", [ArtistController::class, 'store']);
-    Route::get('/list-artists', [ArtistController::class, 'index'])->middleware(ValidarToken::class);
+    Route::get('/list-artists', [ArtistController::class, 'index']);
     Route::get('/search-artist/{id}', [ArtistController::class, 'show']);
     Route::patch('/update-artist/{id}', [ArtistController::class, 'update']);
     Route::delete('/delete-artist/{id}', [ArtistController::class, 'destroy']);
@@ -37,7 +37,7 @@ Route::prefix('artists')->group(function(){
 Route::prefix('playlists')->group(function(){
     Route::post('/create-playlist', [PlaylistController::class, 'store']);
     Route::get('/list-playlists', [PlaylistController::class, 'index'])->middleware("auth:sanctum");
-    Route::post('/add-song/{id}', [PlaylistController::class, 'addSong']);
+    Route::post('/add-song/{id}', [PlaylistController::class, 'addSong'])->middleware(ValidarToken::class);
     Route::delete('/delete/{id}', [PlaylistController::class, 'destroy']);
 });
     
