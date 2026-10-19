@@ -8,6 +8,7 @@ use App\Http\Controllers\GenreController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\SongsController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\ValidarToken;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -21,13 +22,13 @@ Route::get("/gerar-token", function (Request $request) {
 
     return response()->json([
         "user" => $request->user(),
-        "tkn" => $tkn
+        "tkn" => $tkn->plainTextToken
     ], 200);
 });
 
 Route::prefix('artists')->group(function(){
     Route::post("/create-artist", [ArtistController::class, 'store']);
-    Route::get('/list-artists', [ArtistController::class, 'index']);
+    Route::get('/list-artists', [ArtistController::class, 'index'])->middleware(ValidarToken::class);
     Route::get('/search-artist/{id}', [ArtistController::class, 'show']);
     Route::patch('/update-artist/{id}', [ArtistController::class, 'update']);
     Route::delete('/delete-artist/{id}', [ArtistController::class, 'destroy']);

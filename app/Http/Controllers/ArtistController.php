@@ -15,10 +15,10 @@ class ArtistController extends Controller
 {
     private string $messageInternalServerError = "Falha interna no servidor! Tente novamente mais tarde." ;
     // Método show: Retorna todos os items
-    public function index() : JsonResponse {
+    public function index(Request $request) : JsonResponse {
         try {
             $artistas = Artist::all(); // Equivalente ao "SELECT * FROM tabela"
-
+            echo $request["user"] . "\n";
             return response()->json($artistas, 200);
         }catch(Exception $err) {
             return response()->json(['erro'=> $this->messageInternalServerError], 500);

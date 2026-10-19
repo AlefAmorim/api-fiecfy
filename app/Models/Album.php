@@ -18,13 +18,4 @@ class Album extends Model
     public function songs(){
         return $this->hasMany(Song::class);
     }
-    public function show(int $id) {
-        try{
-            $album = Album::with('songs')->findOrFail($id);
-            
-            return response()->json($album,200);
-        }catch(Exception $e) {
-            return response()->json(["erro"=>"Falha ao buscar album"], 500);
-        }
-    }
 }
