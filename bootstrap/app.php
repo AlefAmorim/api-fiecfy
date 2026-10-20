@@ -4,6 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\Http\Middleware\CheckAbilities;
+use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -18,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withMiddleware(function (Middleware $middleware): void {
         //
+        $middleware->alias([ //Para registrar middlewares adicionais
+            'abilities' => CheckAbilities::class,//Middleware do sanctum para verificação das habilidades dos tokens
+            'ability' => CheckForAnyAbility::class // O mesmo que o de cima 
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
