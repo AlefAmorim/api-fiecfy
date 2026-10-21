@@ -17,6 +17,12 @@ Route::prefix("auth")->group(function () {
     Route::post("/login", [AuthController::class, "login"]);
 });
 
+Route::get("/teste-api", function () {
+    return response()->json([
+        "message" => "A API está rodando!🧑‍💻"
+    ], 200); 
+});
+
 // Gera token com todas as permissões/habilidades
 Route::get("/gerar-token", function (Request $request) {
     $tkn = User::findOrFail(1)->createToken("meu_tkn");
