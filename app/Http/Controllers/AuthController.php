@@ -68,8 +68,11 @@ class AuthController extends Controller
 
 
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer'
+            'tkn' => $token,
+            'dados' => $user
         ]);
+    }
+    public function me(Request $request) {
+        return $request->user();
     }
 }
