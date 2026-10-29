@@ -20,7 +20,7 @@ return [
 
     'allowed_methods' => ['*'], // Métodos permitidos
 
-    'allowed_origins' => ['http://localhost:5173'], // Origens que podem fazer as requisições
+    'allowed_origins' => ['*']/*['http://localhost:5173/', 'http://127.0.0.1:5173/']*/, // Origens que podem fazer as requisições
 
     'allowed_origins_patterns' => [],
 

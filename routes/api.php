@@ -18,6 +18,10 @@ Route::prefix("auth")->group(function () {
     Route::get("/me", [AuthController::class, "me"])->middleware("auth:sanctum");
 });
 
+Route::prefix("user")->group(function () {
+    Route::post("/upload", [UserController::class, "upload"])->middleware("auth:sanctum");
+});
+
 Route::get("/teste-api", function () {
     return response()->json([
         "message" => "A API está rodando!🧑‍💻"
