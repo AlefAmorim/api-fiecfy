@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string("profile_pic_url")->default("default.jpg");
 
             $table->timestamps();
+
+            $table->softDeletes();
         });
     }
 

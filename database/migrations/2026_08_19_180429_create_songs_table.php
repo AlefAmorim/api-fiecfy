@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string("audio_path")->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

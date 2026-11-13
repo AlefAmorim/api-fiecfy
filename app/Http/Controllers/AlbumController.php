@@ -87,4 +87,5 @@ class AlbumController extends Controller
             return response()->json(['erro'=> $this->messageInternalServerError], 500);
         }
     }
+    public function desativar(int $id) {    }
 }
