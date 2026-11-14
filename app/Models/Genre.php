@@ -9,4 +9,12 @@ class Genre extends Model
 {   
     use SoftDeletes;
     protected $fillable = ["name", "description", "cover_image"];
+
+    public function song(){
+        return $this->belongsToMany(Song::class);
+    }
+
+    public function artist(){
+        return $this->belongsToMany(Artist::class);
+    }
 }

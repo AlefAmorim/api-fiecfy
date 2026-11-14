@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             
             $table->foreignId("album_id")->constrained()->cascadeOnDelete();
+            $table->foreignId("genre_id")->constrained()->cascadeOnDelete();
             $table->string("title");
             $table->integer("duration_seconds");
             $table->boolean("is_explicit")->default(false);

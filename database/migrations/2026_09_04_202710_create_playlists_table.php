@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('playlists', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("user_id")->constrained()->cascadeOnDelete();
+            $table->boolean("public")->default(false);
             $table->string('name');
             $table->string('picture_url')->nullable();
             $table->timestamps();

@@ -9,10 +9,13 @@ class Playlist extends Model
 {
     use SoftDeletes;
     //
-    protected $fillable = ["name", "picture_url"];
+    protected $fillable = ["user_id", "name", "public", "picture_url"];
 
+    public function users() {
+        return $this->belongsTo(User::class);
+    }
 
     public function songs() {
-        return $this->belongsToMany(Song::class);
+        return $this->hasMany(Song::class);
     }
 }

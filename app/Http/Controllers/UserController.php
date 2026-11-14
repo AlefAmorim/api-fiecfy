@@ -4,17 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
     //
-    public function store(Request $request){
-        
+    public function store(Request $request) : JsonResponse {
+        $validated = $request->validate([
+            "name" => "required",
+            "email" => "required|email",
+            "password" => "required|min:8",
+        ]);
+
+        User::create($validated);
+
+        return response()->json([
+            "mensagem" => "Usuário criado com sucesso!"
+        ], 201);
     } 
-    public function upload(Request $request) {
+
+    public function upload(Request $request): JsonResponse  {
         $user = $request->user();
 
         $validated = $request->validate([

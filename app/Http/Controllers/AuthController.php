@@ -3,37 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(Request $request) {
+    public function register(Request $request): JsonResponse
+    {
         // try {
 
-            $validated = $request->validate([
-                "name" => "required|string",
-                "email" => "required|string|email",
-                "password" => "required|string|min:8"
-            ],[
-                "name" => "O nome é obrigatório!",
-                "email" => "O nome é obrigatório!",
-                "password" => "A senha deve conter no mínimo 8 caracteres, 1 letra maiuscula e minuscula, e um caractere especial(@_!)"
-            ]);
+        $validated = $request->validate([
+            "name" => "required|string",
+            "email" => "required|string|email",
+            "password" => "required|string|min:8"
+        ], [
+            "name" => "O nome é obrigatório!",
+            "email" => "O nome é obrigatório!",
+            "password" => "A senha deve conter no mínimo 8 caracteres, 1 letra maiuscula e minuscula, e um caractere especial(@_!)"
+        ]);
 
-            // if($validated["errors"]){
-            //     return response()->json([
-            //         "erro" => "Erro"
-            //     ], 400);
-            // }
-            $validated["password"] = Hash::make($validated["password"]);
-            $user = User::create($validated);
-    
-            return response()->json([
-                "mensagem" => "Cadastro efetuado com sucesso!",
-                "dados" => $user
-            ], 200);
+        // if($validated["errors"]){
+        //     return response()->json([
+        //         "erro" => "Erro"
+        //     ], 400);
+        // }
+        $validated["password"] = Hash::make($validated["password"]);
+        $user = User::create($validated);
+
+        return response()->json([
+            "mensagem" => "Cadastro efetuado com sucesso!",
+            "dados" => $user
+        ], 200);
         /*}catch(Exception $ex) {
             if($ex instanceof ValidationException) {
                 return response()->json([
@@ -46,19 +49,20 @@ class AuthController extends Controller
         }*/
     }
 
-    public function login(Request $request) {
+    public function login(Request $request): JsonResponse
+    {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required']
+            'email' => "required|email",
+            'password' => "required|min:8"
         ]);
 
-        if(!Auth::attempt($credentials)){
+        if (!Auth::attempt($credentials)) {
             return response()->json(['erro' => "Email ou senha incorretos!"], 400);
         }
 
         $user =  User::whereEmail($request['email'])->firstOrFail();
 
-        if(!$user) {
+        if (!$user) {
             return response()->json([
                 "erro" => "Falha ao realizar login!"
             ], 500);
@@ -72,7 +76,8 @@ class AuthController extends Controller
             'dados' => $user
         ]);
     }
-    public function me(Request $request) {
+    public function me(Request $request)
+    {
         return $request->user();
     }
 }

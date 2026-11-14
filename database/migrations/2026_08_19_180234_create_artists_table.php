@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer("monthly_listeners")->default(0);
 
             //Coluna opcional de Gênero
-            $table->string("genre")->nullable();
+            $table->foreignId("genre_id")->constrained()->cascadeOnDelete();
 
             // Foto de perfil
             $table->string("profile_pic_url")->default("default.jpg");

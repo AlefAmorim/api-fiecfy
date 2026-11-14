@@ -49,4 +49,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function playlist() {
+        return $this->hasMany(Playlist::class);
+    }
 }
