@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Artist;
+use App\Models\Genre;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,8 @@ class ArtistFactory extends Factory
     {
         return [
             "name" => fake()->name(), 
-            "genre" => fake()->word(),
+            "monthly_listeners" => fake()->randomNumber(), 
+            "genre_id" => Genre::inRandomOrder()->first()->id, // Busca o primeiro id dos generos cadastrados em ordem aleatória
             "profile_pic_url" => fake()->imageUrl(300, 300, "people")
         ];
     }
