@@ -13,7 +13,16 @@ use Illuminate\Validation\ValidationException;
 class UserController extends Controller
 {
     //
-    public function store(Request $request) : JsonResponse {
+    public function index(Request $request): JsonResponse {
+        $limit = $request->query("limit");
+        $users = $limit ? User::paginate($limit) : User::all();
+
+        return response()->json([
+            $users
+        ], 200);
+    }
+    public function store(Request $request): JsonResponse
+    {
         $validated = $request->validate([
             "name" => "required",
             "email" => "required|email",
@@ -25,25 +34,26 @@ class UserController extends Controller
         return response()->json([
             "mensagem" => "Usuário criado com sucesso!"
         ], 201);
-    } 
+    }
 
-    public function upload(Request $request): JsonResponse  {
+    public function upload(Request $request): JsonResponse
+    {
         $user = $request->user();
 
         $validated = $request->validate([
             "pic_url" => "required|mimes:jpeg,png,gif,pdf,doc,docx|max:5000"
         ]);
 
-        if($request->hasFile("pic_url")){
+        if ($request->hasFile("pic_url")) {
             $file = $request->file("pic_url");
             $nomeImg = time() . "-" . $file->getClientOriginalName();
 
             $file->move(public_path('img/perfil'), $nomeImg);
-    
+
             $validated['pic_url'] = 'img/perfil/' . $nomeImg;
-    
+
             $user->update($validated);
-    
+
             return response()->json([
                 "mensagem" => "Imagem alterada com sucesso!",
                 "dados" => $user
@@ -51,8 +61,7 @@ class UserController extends Controller
         }
 
         return response()->json([
-                "mensagem" => "Envie a imagem para upload!"
-            ], 400);
-
+            "mensagem" => "Envie a imagem para upload!"
+        ], 400);
     }
 }

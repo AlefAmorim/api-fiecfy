@@ -85,6 +85,7 @@ class AlbumController extends Controller
             return response()->json(['error' => $this->messageInternalServerError], 500);
         }
     }
+    
     public function destroy(int $id): JsonResponse
     {
         try {
