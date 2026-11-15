@@ -27,7 +27,7 @@ Route::prefix("auth")->group(function () {
  * Rotas para manipulação dos usuários
  * 
  */
-Route::prefix("user")->group(function () {
+Route::prefix("users")->group(function () {
     Route::post("/upload", [UserController::class, "upload"]);
     Route::post("/create-user", [UserController::class, "store"]);
     Route::get("/show-users", [UserController::class, "index"]);

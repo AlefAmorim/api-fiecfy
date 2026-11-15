@@ -21,9 +21,14 @@ class ArtistController extends Controller
     {
         try {
             $limit = $request->query("limit");
-            $artistas = $limit ? Artist::with("genre")->paginate($limit) : Artist::with("genre")->get(); // Equivalente ao "SELECT * FROM tabela"
+            $term = $request->query("term");
 
-            return response()->json([$artistas], 200);
+            $artists = Artist::with("genre");
+            if($term) $artists->where("name", "like", "%".$term."%");
+            
+            $artists = $limit ? $artists->paginate($limit) : $artists->get(); // Equivalente ao "SELECT * FROM tabela"
+
+            return response()->json([$artists], 200);
         } catch (Exception $err) {
             return response()->json(['error' => $this->messageInternalServerError], 500);
         }
@@ -33,13 +38,13 @@ class ArtistController extends Controller
     public function show(int $id): JsonResponse
     {
         try {
-            $artista = Artist::with("albums")->findOrFail($id);
-            return response()->json([$artista], 200);
+            $artist = Artist::with("albums")->findOrFail($id);
+            return response()->json([$artist], 200);
         } catch (Exception $err) {
             if ($err instanceof ModelNotFoundException) {
-                return response()->json(['erro' => "Artista não encontrado!"], 404);
+                return response()->json(['error' => "Artista não encontrado!"], 404);
             }
-            return response()->json(['erro' => $this->messageInternalServerError], 500);
+            return response()->json(['error' => $this->messageInternalServerError], 500);
         }
     }
 
@@ -47,48 +52,48 @@ class ArtistController extends Controller
     {
         try {
             $validated = $request->validated();
-            $novoArtista = Artist::create($validated);
+            $newArtist = Artist::create($validated);
             return response()->json(['message' => 'Artista criado com sucesso!'], 201);
         } catch (Exception $ex) {
             if ($ex->getCode() == "HY000") { // Código retornado pelo PDO ao tentar inserir um registro com um campo obrigatório faltando
-                return response()->json(['erro' => "Preencha os dados obrigatórios!"], 400);
+                return response()->json(['error' => "Preencha os dados obrigatórios!"], 400);
             }
-            return response()->json(['erro' => $this->messageInternalServerError], 500);
+            return response()->json(['error' => $this->messageInternalServerError], 500);
         }
     }
 
     public function update(Request $request, int $id): JsonResponse
     {
         try {
-            $artista = Artist::findOrFail($id);
+            $artist = Artist::findOrFail($id);
 
-            $artista->update($request->all());
+            $artist->update($request->all());
 
             return response()->json(['message' => "Artista atualizado com sucesso!"], 200);
         } catch (Exception $err) {
             if ($err instanceof ModelNotFoundException) {
-                return response()->json(['erro' => "Erro ao atualizar artista!Artista não encontrado."], 404);
+                return response()->json(['error' => "Erro ao atualizar artista!Artista não encontrado."], 404);
             }
-            return response()->json(['erro' => $this->messageInternalServerError], 500);
+            return response()->json(['error' => $this->messageInternalServerError], 500);
         }
     }
 
     public function destroy(int $id): JsonResponse
     {
         try {
-            $artista = Artist::findOrFail($id);
+            $artist = Artist::findOrFail($id);
 
-            $artista->forceDelete();
+            $artist->forceDelete();
 
             return response()->json(['message' => 'Artista deletado com sucesso!'], 200);
         } catch (Exception $e) {
             // verifica se o tipo da exceção é ModelNotFoundException
             // ModelNotFoundException é a exceção lançada pelo método findOrFail caso não encontre o registro
             if ($e instanceof ModelNotFoundException) {
-                return response()->json(['erro' => "Erro ao deletar artista com id $id!Atista não encontrado."], 404);
+                return response()->json(['error' => "Erro ao deletar artista com id $id!Atista não encontrado."], 404);
             }
 
-            return response()->json(['erro' => $this->messageInternalServerError], 500);
+            return response()->json(['error' => $this->messageInternalServerError], 500);
         }
     }
 
