@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AlbumRequest;
 use App\Models\Album;
 use App\Models\Artist;
 use Exception;
@@ -18,7 +19,7 @@ class AlbumController extends Controller
     {
         try {
             $limit = $request->query("limit");
-            $albums = $limit ? Album::with("artists")->paginate($limit) : Album::with("artists")->get(); // Retorna  todos os registros da tabela
+            $albums = $limit ? Album::with("artist")->paginate($limit) : Album::with("artist")->get(); // Retorna  todos os registros da tabela
 
             return response()->json($albums, 200);
         } catch (Exception $ex) {
@@ -40,14 +41,10 @@ class AlbumController extends Controller
         }
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(AlbumRequest $request): JsonResponse
     {
         try {
-            $validated = $request->validate([
-                "artist_id" => "required",
-                "title" => "required",
-                "release_year" => "required"
-            ]);
+            $validated = $request->validated();
 
             Artist::findOrFail($validated["artist_id"]); // Verifica se o artista existe
             $album = Album::create($validated);

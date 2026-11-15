@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UsersRequest;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -21,13 +22,9 @@ class UserController extends Controller
             $users
         ], 200);
     }
-    public function store(Request $request): JsonResponse
+    public function store(UsersRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            "name" => "required",
-            "email" => "required|email",
-            "password" => "required|min:8",
-        ]);
+        $validated = $request->validated();
 
         User::create($validated);
 

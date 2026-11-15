@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PlaylistRequest;
 use App\Models\Playlist;
 use Exception;
 use FaixaMusical;
@@ -15,7 +16,6 @@ class PlaylistController extends Controller
     public function addSong(Request $request, int $id): JsonResponse
     {
         try {
-            echo $request->song_id;
             $playlist = Playlist::findOrFail($id);
             $playlist->songs()->attach($request->song_id);
 
@@ -58,15 +58,15 @@ class PlaylistController extends Controller
         ], 200);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(PlaylistRequest $request): JsonResponse
     {
         try {
-            $playlist = Playlist::create($request->all());
+            $validated = $request->validated();
+            $playlist = Playlist::create($validated);
             $nome = $playlist->name;
 
             return response()->json([
-                'message' => "Playlist '$nome' criada com sucesso!",
-                "data" => $playlist
+                'message' => "Playlist '$nome' criada com sucesso!"
             ], 201);
         } catch (Exception $e) {
             return response()->json(['message' => "Erro ao criar playlist!"], 500);

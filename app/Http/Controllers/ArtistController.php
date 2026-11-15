@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArtistRequest;
 use App\Models\Artist;
 use Error;
 use Exception;
@@ -20,7 +21,7 @@ class ArtistController extends Controller
     {
         try {
             $limit = $request->query("limit");
-            $artistas = $limit ? Artist::with("genres")->paginate($limit) : Artist::with("genres")->get(); // Equivalente ao "SELECT * FROM tabela"
+            $artistas = $limit ? Artist::with("genre")->paginate($limit) : Artist::with("genre")->get(); // Equivalente ao "SELECT * FROM tabela"
 
             return response()->json([$artistas], 200);
         } catch (Exception $err) {
@@ -42,13 +43,10 @@ class ArtistController extends Controller
         }
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(ArtistRequest $request): JsonResponse
     {
         try {
-            $validated = $request->validate([
-                "name" => "required",
-                "genre_id" => "required",
-            ]);
+            $validated = $request->validated();
             $novoArtista = Artist::create($validated);
             return response()->json(['message' => 'Artista criado com sucesso!'], 201);
         } catch (Exception $ex) {

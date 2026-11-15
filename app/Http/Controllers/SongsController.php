@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SongsRequest;
 use App\Models\Album;
 use App\Models\Song;
 use Exception;
@@ -23,16 +24,11 @@ class SongsController extends Controller
         ], 200);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(SongsRequest $request): JsonResponse
     {
         try {
 
-            $validated = $request->validate([
-                "album_id" => "required|int",
-                "title" => "required",
-                "is_explicit" => "required|bool",
-                "track_number" => "required",
-            ]);
+            $validated = $request->validated();
             $song_album = Album::with("songs")->where("track_number", "=", $validated["track_number"]);
             if ($song_album) {
                 return response()->json([

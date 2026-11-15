@@ -5,17 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\AuthRequest;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(Request $request): JsonResponse
+    public function register(AuthRequest $request): JsonResponse
     {
         // try {
 
-        $validated = $request->validate([
+        $validated = $request->validated();/*$request->validate([
             "name" => "required|string",
             "email" => "required|string|email",
             "password" => "required|string|min:8"
@@ -23,7 +24,7 @@ class AuthController extends Controller
             "name" => "O nome é obrigatório!",
             "email" => "O nome é obrigatório!",
             "password" => "A senha deve conter no mínimo 8 caracteres, 1 letra maiuscula e minuscula, e um caractere especial(@_!)"
-        ]);
+        ]); */
 
         // if($validated["errors"]){
         //     return response()->json([
@@ -34,8 +35,8 @@ class AuthController extends Controller
         $user = User::create($validated);
 
         return response()->json([
-            "mensagem" => "Cadastro efetuado com sucesso!",
-            "dados" => $user
+            "menssge" => "Cadastro efetuado com sucesso!",
+            "data" => $user
         ], 200);
         /*}catch(Exception $ex) {
             if($ex instanceof ValidationException) {
@@ -49,31 +50,31 @@ class AuthController extends Controller
         }*/
     }
 
-    public function login(Request $request): JsonResponse
+    public function login(AuthRequest $request): JsonResponse
     {
-        $credentials = $request->validate([
+        $credentials = $request->safe()->only(["email", "password"]); /*$request->validate([
             'email' => "required|email",
             'password' => "required|min:8"
-        ]);
+        ]);*/
 
         if (!Auth::attempt($credentials)) {
-            return response()->json(['erro' => "Email ou senha incorretos!"], 400);
+            return response()->json(['error' => "Email ou senha incorretos!"], 400);
         }
 
         $user =  User::whereEmail($request['email'])->firstOrFail();
 
         if (!$user) {
             return response()->json([
-                "erro" => "Falha ao realizar login!"
+                "error" => "Falha ao realizar login!"
             ], 500);
         }
 
-        $token = $user->createToken('auth-token', [])->plainTextToken;
+        $token = $user->createToken('auth-token')->plainTextToken;
 
 
         return response()->json([
             'tkn' => $token,
-            'dados' => $user
+            'data' => $user
         ]);
     }
     public function me(Request $request)
