@@ -13,26 +13,11 @@ use Illuminate\Routing\Controller;
 
 class PlaylistController extends Controller
 {
-    public function addSong(Request $request, int $id): JsonResponse
-    {
-        try {
-            $playlist = Playlist::findOrFail($id);
-            $playlist->songs()->attach($request->song_id);
-
-            return response()->json(["message" => "Songs added successfully!"], 201);
-        } catch (Exception $e) {
-            echo $e;
-            if ($e instanceof ModelNotFoundException) {
-                return response()->json(["error" => "Playlist not found!"], 404);
-            }
-            return response()->json(["error" => "Fail adding music!Try again later."], 500);
-        }
-    }
-
     public function index(Request $request): JsonResponse
     {
         $limit = $request->query("limit");
-        $playlists = $limit ? Playlist::with("songs")->paginate($limit) : Playlist::with("songs")->get();
+        $page = $request->query("page");
+        $playlists = $limit ? Playlist::with("songs")->paginate(perPage: $limit, page: $page) : Playlist::with("songs")->get();
         return response()->json([
             $playlists
         ], 200);
@@ -51,7 +36,8 @@ class PlaylistController extends Controller
     public function listPublicPlaylists(Request $request): JsonResponse
     {
         $limit = $request->query("limit");
-        $playlists = $limit ? Playlist::with("songs")->paginate($limit)->where("public", "=", true) : Playlist::with("songs")->get()->where("public", "=", true);
+        $page = $request->query("page");
+        $playlists = $limit ? Playlist::with("songs")->paginate(perPage: $limit, page: $page)->where("public", "=", true) : Playlist::with("songs")->get()->where("public", "=", true);
 
         return response()->json([
             $playlists
@@ -71,6 +57,45 @@ class PlaylistController extends Controller
         } catch (Exception $e) {
             return response()->json(['message' => "Error creating playlist! Try again later."], 500);
         }
+    }
+
+    public function addSong(Request $request, int $id): JsonResponse
+    {
+        try {
+            $playlist = Playlist::findOrFail($id);
+            $playlist->songs()->attach($request->song_id);
+
+            return response()->json(["message" => "Songs added successfully!"], 201);
+        } catch (Exception $e) {
+            echo $e;
+            if ($e instanceof ModelNotFoundException) {
+                return response()->json(["error" => "Playlist not found!"], 404);
+            }
+            return response()->json(["error" => "Fail adding music!Try again later."], 500);
+        }
+    }
+
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $validated = $request->validate([
+            "name" => "sometimes",
+            "public" => "sometimes|bool",
+            "picture_url" => "sometimes"
+        ]);
+
+        if (!count($validated)) {
+            return response()->json([
+                "message" => "Fill the field to update."
+            ], 400);
+        }
+
+        $playlist = Playlist::findOrFail($id);
+
+        $playlist->update($validated);
+
+        return response()->json([
+            "message" => "Playlist updated successfully!"
+        ], 200);
     }
 
     public function destroy(int $id): JsonResponse
@@ -101,28 +126,6 @@ class PlaylistController extends Controller
 
         return response()->json([
             "message" => "Playlist activated successfully!"
-        ], 200);
-    }
-    public function update(Request $request, int $id): JsonResponse
-    {
-        $validated = $request->validate([
-            "name" => "sometimes",
-            "public" => "sometimes|bool",
-            "picture_url" => "sometimes"
-        ]);
-
-        if (!count($validated)) {
-            return response()->json([
-                "message" => "Fill the field to update."
-            ], 400);
-        }
-
-        $playlist = Playlist::findOrFail($id);
-
-        $playlist->update($validated);
-
-        return response()->json([
-            "message" => "Playlist updated successfully!"
         ], 200);
     }
 }

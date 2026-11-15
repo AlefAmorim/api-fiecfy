@@ -19,11 +19,12 @@ class AlbumController extends Controller
     {
         try {
             $limit = $request->query("limit");
+            $page = $request->query("page");
             $term = $request->query("term");
 
             $albums = Album::with("artist");
             if ($term) $albums->where("name", "like", "%" . $term . "%");
-            $albums = $limit ? $albums->paginate($limit) : $albums->get();
+            $albums = $limit ? $albums->paginate(perPage: $limit, page: $page) : $albums->get();
 
             return response()->json($albums, 200);
         } catch (Exception $ex) {

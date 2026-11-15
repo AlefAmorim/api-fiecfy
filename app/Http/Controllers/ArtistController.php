@@ -16,17 +16,18 @@ use PDOException;
 class ArtistController extends Controller
 {
     private string $messageInternalServerError = "Falha interna no servidor! Tente novamente mais tarde.";
-    // Método show: Retorna todos os items
+
     public function index(Request $request): JsonResponse
     {
         try {
             $limit = $request->query("limit");
+            $page = $request->query("page");
             $term = $request->query("term");
 
             $artists = Artist::with("genre");
-            if($term) $artists->where("name", "like", "%".$term."%");
-            
-            $artists = $limit ? $artists->paginate($limit) : $artists->get(); // Equivalente ao "SELECT * FROM tabela"
+            if ($term) $artists->where("name", "like", "%" . $term . "%");
+
+            $artists = $limit ? $artists->paginate(perPage: $limit, page: $page) : $artists->get(); // Equivalente ao "SELECT * FROM tabela"
 
             return response()->json([$artists], 200);
         } catch (Exception $err) {
@@ -34,7 +35,6 @@ class ArtistController extends Controller
         }
     }
 
-    // Método show: Retorna o item buscado por id
     public function show(int $id): JsonResponse
     {
         try {

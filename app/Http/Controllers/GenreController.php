@@ -10,11 +10,11 @@ use Illuminate\Routing\Controller;
 
 class GenreController extends Controller
 {
-    //
     public function index(Request $request): JsonResponse
     {
         $limit = $request->query("limit");
-        $genres = $limit ? Genre::paginate($limit) : Genre::all();
+        $page = $request->query("page");
+        $genres = $limit ? Genre::paginate(perPage: $limit, page: $page) : Genre::all();
         return response()->json([$genres], 200);
     }
 

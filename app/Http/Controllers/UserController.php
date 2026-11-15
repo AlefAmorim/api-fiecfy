@@ -17,10 +17,11 @@ class UserController extends Controller
     public function index(Request $request): JsonResponse
     {
         $limit = $request->query("limit");
+        $page = $request->query("page");
         $term = $request->query("term");
-        $users = User::where("name", "like", "%" . $term . "%");
+        $users = User::where("name", "like", "%".$term."%");
 
-        $users = $limit ? $users->paginate($limit) : $users->get();
+        $users = $limit ? $users->paginate(perPage: $limit, page: $page) : $users->get();
 
         return response()->json([
             $users

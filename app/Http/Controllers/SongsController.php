@@ -17,14 +17,15 @@ class SongsController extends Controller
     public function index(Request $request): JsonResponse
     {
         $limit = $request->query("limit");
+        $page = $request->query("page");
         $term = $request->query("term");
-        
+
         $songs = Song::with("album");
 
-        if($term) $songs = $songs->where("name", "like", "%".$term."%");
+        if ($term) $songs = $songs->where("name", "like", "%" . $term . "%");
 
         return response()->json([
-            $limit ? $songs->paginate($limit) : $songs->get()
+            $limit ? $songs->paginate(perPage: $limit, page: $page) : $songs->get()
         ], 200);
     }
 
