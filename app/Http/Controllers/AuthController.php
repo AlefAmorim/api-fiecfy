@@ -14,58 +14,29 @@ class AuthController extends Controller
 {
     public function register(AuthRequest $request): JsonResponse
     {
-        // try {
-
-        $validated = $request->validated();/*$request->validate([
-            "name" => "required|string",
-            "email" => "required|string|email",
-            "password" => "required|string|min:8"
-        ], [
-            "name" => "O nome é obrigatório!",
-            "email" => "O nome é obrigatório!",
-            "password" => "A senha deve conter no mínimo 8 caracteres, 1 letra maiuscula e minuscula, e um caractere especial(@_!)"
-        ]); */
-
-        // if($validated["errors"]){
-        //     return response()->json([
-        //         "erro" => "Erro"
-        //     ], 400);
-        // }
+        $validated = $request->validated();
         $validated["password"] = Hash::make($validated["password"]);
         $user = User::create($validated);
 
         return response()->json([
-            "menssge" => "Cadastro efetuado com sucesso!",
+            "menssge" => "Register made successfully!",
             "data" => $user
         ], 200);
-        /*}catch(Exception $ex) {
-            if($ex instanceof ValidationException) {
-                return response()->json([
-                    "erro" => $ex->getMessage()
-                ], 400);
-            }
-            return response()->json([
-                "mensagem" => "Erro interno no servidor!"
-                ], 500);
-        }*/
     }
 
     public function login(AuthRequest $request): JsonResponse
     {
-        $credentials = $request->safe()->only(["email", "password"]); /*$request->validate([
-            'email' => "required|email",
-            'password' => "required|min:8"
-        ]);*/
+        $credentials = $request->safe()->only(["email", "password"]); 
 
         if (!Auth::attempt($credentials)) {
-            return response()->json(['error' => "Email ou senha incorretos!"], 400);
+            return response()->json(['error' => "Email or password wrong!"], 400);
         }
 
         $user =  User::whereEmail($request['email'])->firstOrFail();
 
         if (!$user) {
             return response()->json([
-                "error" => "Falha ao realizar login!"
+                "error" => "Fail on login! Try again later."
             ], 500);
         }
 

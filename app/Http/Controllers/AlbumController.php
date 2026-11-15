@@ -13,7 +13,7 @@ use Illuminate\Routing\Controller;
 
 class AlbumController extends Controller
 {
-    private string $messageInternalServerError = "Falha no servidor!Tente novamente mais tarde.";
+    private string $messageInternalServerError = "Internal server error!Try again later.";
 
     public function index(Request $request): JsonResponse
     {
@@ -22,7 +22,7 @@ class AlbumController extends Controller
             $term = $request->query("term");
 
             $albums = Album::with("artist");
-            if($term) $albums->where("name", "like", "%".$term."%");
+            if ($term) $albums->where("name", "like", "%" . $term . "%");
             $albums = $limit ? $albums->paginate($limit) : $albums->get();
 
             return response()->json($albums, 200);
@@ -39,7 +39,7 @@ class AlbumController extends Controller
             return response()->json($album, 200);
         } catch (Exception $ex) {
             if ($ex instanceof ModelNotFoundException) {
-                return response()->json(['error' => 'Album não encontrado!'], 404);
+                return response()->json(['error' => 'Album not  found.'], 404);
             }
             return response()->json(['error' => $this->messageInternalServerError], 500);
         }
@@ -53,16 +53,16 @@ class AlbumController extends Controller
             Artist::findOrFail($validated["artist_id"]); // Verifica se o artista existe
             $album = Album::create($validated);
 
-            return response()->json(['message' => 'Album adicionado com sucesso!'], 201);
+            return response()->json(['message' => 'Album added successfully!'], 201);
         } catch (Exception $ex) {
             // Tratamento caso haja algum campo obrigatório faltando
             if ($ex->getCode() == "HY000") {
-                return response()->json(['error' => "Preencha os dados obrigatórios!"], 400);
+                return response()->json(['error' => "Fill the required fields."], 400);
             }
 
             //Tratamento caso o artista referenciado não exista
             if ($ex instanceof ModelNotFoundException) {
-                return response()->json(['error' => "Artista referenciado não encontrado!"], 404);
+                return response()->json(['error' => "Albums artist not found."], 404);
             }
             return response()->json(['error' => $this->messageInternalServerError], 500);
         }
@@ -74,19 +74,19 @@ class AlbumController extends Controller
             $album = Album::findOrFail($id);
             $album->update($request->all());
 
-            return response()->json(['message' => 'Album atualizado com sucesso!'], 200);
+            return response()->json(['message' => 'Album updated successfully!'], 200);
         } catch (Exception $ex) {
             if ($ex->getCode() == "HY000") {
-                return response()->json(['error' => "Preencha os dados obrigatórios!"], 400);
+                return response()->json(['error' => "Fill the required fields."], 400);
             }
 
             if ($ex instanceof ModelNotFoundException) {
-                return response()->json(['error' => "Album não encontrado!"], 404);
+                return response()->json(['error' => "Album not found."], 404);
             }
             return response()->json(['error' => $this->messageInternalServerError], 500);
         }
     }
-    
+
     public function destroy(int $id): JsonResponse
     {
         try {
@@ -94,10 +94,10 @@ class AlbumController extends Controller
 
             $album->forceDelete();
 
-            return response()->json(['message' => "Album deletado com sucesso!"], 200);
+            return response()->json(['message' => "Album removed successfully!"], 200);
         } catch (Exception $ex) {
             if ($ex instanceof ModelNotFoundException) {
-                return response()->json(['error' => "Album não encontrado!"], 404);
+                return response()->json(['error' => "Album not found."], 404);
             }
             return response()->json(['error' => $this->messageInternalServerError], 500);
         }
@@ -110,7 +110,7 @@ class AlbumController extends Controller
         $album->delete();
 
         return response()->json([
-            "message" => "Album desativado com sucesso!"
+            "message" => "Album inactivaded successfully!"
         ], 200);
     }
 
@@ -121,7 +121,7 @@ class AlbumController extends Controller
         $album->restore();
 
         return response()->json([
-            "message" => "Album reativado com sucesso!"
+            "message" => "Album activated successfully!"
         ], 200);
     }
 }

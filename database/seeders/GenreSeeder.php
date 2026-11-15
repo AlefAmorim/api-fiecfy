@@ -40,7 +40,7 @@ class GenreSeeder extends Seeder
                 "cover_image" => fake()->imageUrl(300, 300, "nature"),
             ],
             [
-                "name" => "Sertanejo",
+                "name" => "Countryside",
                 "description" => fake()->paragraph(),
                 "cover_image" => fake()->imageUrl(300, 300, "nature"),
             ],
@@ -50,7 +50,7 @@ class GenreSeeder extends Seeder
                 "cover_image" => fake()->imageUrl(300, 300, "nature"),
             ],
             [
-                "name" => "Eletrônica",
+                "name" => "Eletronic",
                 "description" => fake()->paragraph(),
                 "cover_image" => fake()->imageUrl(300, 300, "nature"),
             ],

@@ -27,7 +27,7 @@ class GenreController extends Controller
 
         Genre::create($validated);
 
-        return response()->json(["message" => "Gênero criado com sucesso!"], 201);
+        return response()->json(["message" => "Genre created successfully!"], 201);
     }
 
     public function destroy(int $id): JsonResponse
@@ -36,7 +36,7 @@ class GenreController extends Controller
         $genre->forceDelete();
 
         return response()->json([
-            "message" => "Gênero removido com sucesso!"
+            "message" => "Genre removed successfully!"
         ], 200);
     }
 
@@ -46,7 +46,7 @@ class GenreController extends Controller
         $genre->delete();
 
         return response()->json([
-            "message" => "Gênero desativado com sucesso!"
+            "message" => "Genre inactivated successfully!"
         ], 200);
     }
 
@@ -56,7 +56,7 @@ class GenreController extends Controller
         $genre->restore();
 
         return response()->json([
-            "message" => "Gênero reativado com sucesso!"
+            "message" => "Genre activated successfully!"
         ], 200);
     }
 
@@ -69,6 +69,6 @@ class GenreController extends Controller
         $genre = Genre::findOrFail($id);
         $genre->update($validated);
 
-        return response()->json(["message" => "Gênero atualizaado com sucesso!"], 201);
+        return response()->json(["message" => "Genre updated successfully!"], 200);
     }
 }

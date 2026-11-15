@@ -42,7 +42,7 @@ class ArtistController extends Controller
             return response()->json([$artist], 200);
         } catch (Exception $err) {
             if ($err instanceof ModelNotFoundException) {
-                return response()->json(['error' => "Artista não encontrado!"], 404);
+                return response()->json(['error' => "Artist not found!"], 404);
             }
             return response()->json(['error' => $this->messageInternalServerError], 500);
         }
@@ -53,10 +53,10 @@ class ArtistController extends Controller
         try {
             $validated = $request->validated();
             $newArtist = Artist::create($validated);
-            return response()->json(['message' => 'Artista criado com sucesso!'], 201);
+            return response()->json(['message' => 'Artist created successfully!'], 201);
         } catch (Exception $ex) {
             if ($ex->getCode() == "HY000") { // Código retornado pelo PDO ao tentar inserir um registro com um campo obrigatório faltando
-                return response()->json(['error' => "Preencha os dados obrigatórios!"], 400);
+                return response()->json(['error' => "Fill the required fields."], 400);
             }
             return response()->json(['error' => $this->messageInternalServerError], 500);
         }
@@ -69,10 +69,10 @@ class ArtistController extends Controller
 
             $artist->update($request->all());
 
-            return response()->json(['message' => "Artista atualizado com sucesso!"], 200);
+            return response()->json(['message' => "Artist updated successfully!"], 200);
         } catch (Exception $err) {
             if ($err instanceof ModelNotFoundException) {
-                return response()->json(['error' => "Erro ao atualizar artista!Artista não encontrado."], 404);
+                return response()->json(['error' => "Error updating!Artist not found."], 404);
             }
             return response()->json(['error' => $this->messageInternalServerError], 500);
         }
@@ -85,12 +85,12 @@ class ArtistController extends Controller
 
             $artist->forceDelete();
 
-            return response()->json(['message' => 'Artista deletado com sucesso!'], 200);
+            return response()->json(['message' => 'Artista removed successfully!'], 200);
         } catch (Exception $e) {
             // verifica se o tipo da exceção é ModelNotFoundException
             // ModelNotFoundException é a exceção lançada pelo método findOrFail caso não encontre o registro
             if ($e instanceof ModelNotFoundException) {
-                return response()->json(['error' => "Erro ao deletar artista com id $id!Atista não encontrado."], 404);
+                return response()->json(['error' => "Artist not found."], 404);
             }
 
             return response()->json(['error' => $this->messageInternalServerError], 500);
@@ -104,7 +104,7 @@ class ArtistController extends Controller
         $artist->delete();
 
         return response()->json([
-            "message" => "Artista desativado com sucesso!"
+            "message" => "Artist inactivated successfully!"
         ], 200);
     }
 
@@ -115,7 +115,7 @@ class ArtistController extends Controller
         $artist->restore();
 
         return response()->json([
-            "message" => "Artista reativado com sucesso!"
+            "message" => "Artist activated successfully!"
         ], 200);
     }
 }

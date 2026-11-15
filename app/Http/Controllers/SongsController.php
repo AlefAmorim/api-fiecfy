@@ -36,17 +36,17 @@ class SongsController extends Controller
             $song_album = Album::with("songs")->where("track_number", "=", $validated["track_number"]);
             if ($song_album) {
                 return response()->json([
-                    "error" => "Musica já cadastrada na posição especificada."
+                    "error" => "Songs already in this track."
                 ], 400);
             }
 
             $song = Song::create($validated);
-            return response()->json(["message" => "Música criada com sucesso!"], 201);
+            return response()->json(["message" => "Song created successfully!"], 201);
         } catch (Exception $e) {
             if ($e instanceof ModelNotFoundException) {
-                return response()->json(["error" => "Album não encontrado!"], 404);
+                return response()->json(["error" => "Album not found!"], 404);
             }
-            return response()->json(["error" => "Falha ao criar musica!"], 404);
+            return response()->json(["error" => "Error creating song!"], 404);
         }
     }
 
@@ -57,7 +57,7 @@ class SongsController extends Controller
         $song->forceDelete();
 
         return response()->json([
-            "message" => "Música deletada com sucesso"
+            "message" => "Song removed successfully!"
         ], 200);
     }
 
@@ -68,7 +68,7 @@ class SongsController extends Controller
         $song->delete();
 
         return response()->json([
-            "message" => "Música desativada com sucesso"
+            "message" => "Song inactivated successfully!"
         ], 200);
     }
 
@@ -79,7 +79,7 @@ class SongsController extends Controller
         $song->restore();
 
         return response()->json([
-            "message" => "Musica reativada com sucesso!"
+            "message" => "Song activated successfully!"
         ], 200);
     }
 
@@ -95,7 +95,7 @@ class SongsController extends Controller
 
         if (!sizeof($validated)) {
             return response()->json([
-                "error" => "Preencha os campos para atualização."
+                "error" => "Fill the field to update."
             ], 400);
         }
 
@@ -104,7 +104,7 @@ class SongsController extends Controller
         $song->update($validated);
 
         return response()->json([
-            "message" => "Música alterada com sucesso!"
+            "message" => "Song updated successfully!"
         ], 200);
     }
 }

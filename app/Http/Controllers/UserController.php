@@ -33,7 +33,7 @@ class UserController extends Controller
         User::create($validated);
 
         return response()->json([
-            "mensagem" => "Usuário criado com sucesso!"
+            "mensagem" => "User created successfully!"
         ], 201);
     }
 
@@ -56,13 +56,13 @@ class UserController extends Controller
             $user->update($validated);
 
             return response()->json([
-                "mensagem" => "Imagem alterada com sucesso!",
+                "mensagem" => "Image updated successfully!",
                 "dados" => $user
             ], 200);
         }
 
         return response()->json([
-            "mensagem" => "Envie a imagem para upload!"
+            "mensagem" => "Send an image to upload!"
         ], 400);
     }
 }

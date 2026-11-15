@@ -19,13 +19,13 @@ class PlaylistController extends Controller
             $playlist = Playlist::findOrFail($id);
             $playlist->songs()->attach($request->song_id);
 
-            return response()->json(["message" => "Musica adicionada com sucesso!"], 201);
+            return response()->json(["message" => "Songs added successfully!"], 201);
         } catch (Exception $e) {
             echo $e;
             if ($e instanceof ModelNotFoundException) {
-                return response()->json(["error" => "Playlist não encontrada!"], 404);
+                return response()->json(["error" => "Playlist not found!"], 404);
             }
-            return response()->json(["error" => "Falha ao adicionar musica na playlist!"], 500);
+            return response()->json(["error" => "Fail adding music!Try again later."], 500);
         }
     }
 
@@ -66,10 +66,10 @@ class PlaylistController extends Controller
             $nome = $playlist->name;
 
             return response()->json([
-                'message' => "Playlist '$nome' criada com sucesso!"
+                'message' => "Playlist created successfully!"
             ], 201);
         } catch (Exception $e) {
-            return response()->json(['message' => "Erro ao criar playlist!"], 500);
+            return response()->json(['message' => "Error creating playlist! Try again later."], 500);
         }
     }
 
@@ -79,7 +79,7 @@ class PlaylistController extends Controller
         $playlist->forceDelete();
 
         return response()->json([
-            'message' => "Playlist excluída com sucesso!"
+            'message' => "Playlist removed successfully!"
         ], 200);
     }
 
@@ -89,7 +89,7 @@ class PlaylistController extends Controller
         $playlist->delete();
 
         return response()->json([
-            'message' => "Playlist desitavada com sucesso!"
+            'message' => "Playlist inactivated successfully!"
         ], 200);
     }
 
@@ -100,7 +100,7 @@ class PlaylistController extends Controller
         $playlist->restore();
 
         return response()->json([
-            "message" => "Playlist reativada com sucesso!"
+            "message" => "Playlist activated successfully!"
         ], 200);
     }
     public function update(Request $request, int $id): JsonResponse
@@ -113,7 +113,7 @@ class PlaylistController extends Controller
 
         if (!count($validated)) {
             return response()->json([
-                "message" => "Informe os campos para alteração."
+                "message" => "Fill the field to update."
             ], 400);
         }
 
@@ -122,7 +122,7 @@ class PlaylistController extends Controller
         $playlist->update($validated);
 
         return response()->json([
-            "message" => "Playlist atualizada com sucesso!"
+            "message" => "Playlist updated successfully!"
         ], 200);
     }
 }

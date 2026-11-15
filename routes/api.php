@@ -138,9 +138,9 @@ Route::prefix('albums')->group(function () {
  * Rota para teste da API
  * 
  */
-Route::get("/teste-api", function () {
+Route::get("/test-api", function () {
     return response()->json([
-        "message" => "A API está rodando!🧑‍💻"
+        "message" => "API is running!🧑‍💻"
     ], 200);
 });
 
@@ -151,7 +151,7 @@ Route::get("/teste-api", function () {
  */
 
 // Gera token com todas as permissões/habilidades
-Route::get("/gerar-token", function (Request $request) {
+Route::get("/generate-token", function (Request $request) {
     $tkn = User::findOrFail(1)->createToken("meu_tkn");
 
     return response()->json([
@@ -161,7 +161,7 @@ Route::get("/gerar-token", function (Request $request) {
 });
 
 //Gera token com a permissão/habilidade de usuário
-Route::get("/gerar-token-user", function (Request $request) {
+Route::get("/generate-token-user", function (Request $request) {
     $tkn = User::findOrFail(1)->createToken("meu_tkn", ["user"]);
 
     return response()->json([
@@ -171,7 +171,7 @@ Route::get("/gerar-token-user", function (Request $request) {
 });
 
 //Gera token com a permissão/habilidade de admin
-Route::get("/gerar-token-admin", function (Request $request) {
+Route::get("/generate-token-admin", function (Request $request) {
     $tkn = User::findOrFail(1)->createToken("meu_tkn", ["admin"]);
 
     return response()->json([
