@@ -34,8 +34,8 @@ class SongsController extends Controller
         try {
 
             $validated = $request->validated();
-            $song_album = Album::with("songs")->where("track_number", "=", $validated["track_number"]);
-            if ($song_album) {
+            $song_album = Song::all()->where("album_id", "=", $validated["album_id"])->where("track_number", "=", $validated["track_number"]);
+            if (count($song_album)) {
                 return response()->json([
                     "error" => "Songs already in this track."
                 ], 400);
@@ -47,7 +47,7 @@ class SongsController extends Controller
             if ($e instanceof ModelNotFoundException) {
                 return response()->json(["error" => "Album not found!"], 404);
             }
-            return response()->json(["error" => "Error creating song!"], 404);
+            return response()->json(["error" => $e->getMessage()], 500);
         }
     }
 

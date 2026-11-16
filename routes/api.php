@@ -43,8 +43,8 @@ Route::prefix('songs')->group(function () {
     Route::get('/list-songs', [SongsController::class, 'index']);
 
     // Rotas com autenticação
+    Route::post("/create-song", [SongsController::class, 'store']);
     Route::middleware("auth:sanctum")->group(function () {
-        Route::post("/create-song", [SongsController::class, 'store']);
         Route::patch('/update-song/{id}', [SongsController::class, 'update']);
         Route::delete('/delete-song/{id}', [SongsController::class, 'destroy']);
         Route::patch('/inactivate-song/{id}', [SongsController::class, 'inactivate']);

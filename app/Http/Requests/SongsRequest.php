@@ -24,6 +24,8 @@ class SongsRequest extends FormRequest
     {
         return [
             "album_id" => "required|int",
+            "genre_id" => "required",
+            "duration_seconds" => "required|int",
             "title" => "required",
             "is_explicit" => "required|bool",
             "track_number" => "required",

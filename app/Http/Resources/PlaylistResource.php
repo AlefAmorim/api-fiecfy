@@ -22,7 +22,7 @@ class PlaylistResource extends JsonResource
             "picture_url" => $this->picture_url,
             "created_at" => $this->created_at,
             "user" => $this->whenLoaded("users", new UserResource(User::findOrFail($this->user_id))),
-            "songs" => $this->songs,
+            "songs" => $this->whenLoaded("songs", SongResource::collection($this->songs)),
         ];
     }
 }

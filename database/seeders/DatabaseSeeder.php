@@ -26,7 +26,9 @@ class DatabaseSeeder extends Seeder
         Artist::factory(10)->create();
         Album::factory(20)->create();
         Song::factory(100)->create();
-        Playlist::factory(10)->create();
+        Playlist::factory(10)
+            ->hasAttached(Song::inRandomOrder()->limit(3)->get(), [])
+            ->create();
 
         User::factory()->create([
             'name' => 'Dev User',
