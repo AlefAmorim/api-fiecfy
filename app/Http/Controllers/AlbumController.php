@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 
 class AlbumController extends Controller
 {
@@ -26,7 +27,7 @@ class AlbumController extends Controller
             if ($term) $albums->where("name", "like", "%" . $term . "%");
             $albums = $limit ? $albums->paginate(perPage: $limit, page: $page) : $albums->get();
 
-            return response()->json($albums, 200);
+            return response()->json($albums->toResourceCollection(), 200);
         } catch (Exception $ex) {
             return response()->json(['error' => $this->messageInternalServerError], 500);
         }
@@ -37,12 +38,12 @@ class AlbumController extends Controller
         try {
             $album = Album::with('songs')->findOrFail($id);
 
-            return response()->json($album, 200);
+            return response()->json($album->toResource(), 200);
         } catch (Exception $ex) {
             if ($ex instanceof ModelNotFoundException) {
                 return response()->json(['error' => 'Album not  found.'], 404);
             }
-            return response()->json(['error' => $this->messageInternalServerError], 500);
+            return response()->json(['error' => $ex->getMessage()], 500);
         }
     }
 

@@ -15,7 +15,7 @@ class GenreController extends Controller
         $limit = $request->query("limit");
         $page = $request->query("page");
         $genres = $limit ? Genre::paginate(perPage: $limit, page: $page) : Genre::all();
-        return response()->json([$genres], 200);
+        return response()->json([$genres->toResourceCollection()], 200);
     }
 
     public function store(Request $request): JsonResponse

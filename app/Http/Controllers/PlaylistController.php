@@ -19,7 +19,7 @@ class PlaylistController extends Controller
         $page = $request->query("page");
         $playlists = $limit ? Playlist::with("songs")->paginate(perPage: $limit, page: $page) : Playlist::with("songs")->get();
         return response()->json([
-            $playlists
+            $playlists->toResourceCollection()
         ], 200);
     }
 
@@ -29,7 +29,7 @@ class PlaylistController extends Controller
         $playlists = $user->playlist()->get();
 
         return response()->json([
-            $playlists
+            $playlists->toResourceCollection()
         ], 200);
     }
 
@@ -37,10 +37,12 @@ class PlaylistController extends Controller
     {
         $limit = $request->query("limit");
         $page = $request->query("page");
-        $playlists = $limit ? Playlist::with("songs")->paginate(perPage: $limit, page: $page)->where("public", "=", true) : Playlist::with("songs")->get()->where("public", "=", true);
+        $playlists = Playlist::with("songs")->where("public", "=", true);
+        $playlists = $limit ? $playlists->paginate(perPage: $limit, page: $page) : $playlists->get();
+        
 
         return response()->json([
-            $playlists
+            $playlists->toResourceCollection()
         ], 200);
     }
 

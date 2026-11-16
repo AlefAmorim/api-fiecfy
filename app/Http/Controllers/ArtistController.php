@@ -29,7 +29,7 @@ class ArtistController extends Controller
 
             $artists = $limit ? $artists->paginate(perPage: $limit, page: $page) : $artists->get(); // Equivalente ao "SELECT * FROM tabela"
 
-            return response()->json([$artists], 200);
+            return response()->json([$artists->toResourceCollection()], 200);
         } catch (Exception $err) {
             return response()->json(['error' => $this->messageInternalServerError], 500);
         }
@@ -39,7 +39,7 @@ class ArtistController extends Controller
     {
         try {
             $artist = Artist::with("albums")->findOrFail($id);
-            return response()->json([$artist], 200);
+            return response()->json([$artist->toResource()], 200);
         } catch (Exception $err) {
             if ($err instanceof ModelNotFoundException) {
                 return response()->json(['error' => "Artist not found!"], 404);

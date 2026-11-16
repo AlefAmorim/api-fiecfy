@@ -23,9 +23,9 @@ class SongsController extends Controller
         $songs = Song::with("album");
 
         if ($term) $songs = $songs->where("name", "like", "%" . $term . "%");
-
+        $songs = $limit ? $songs->paginate(perPage: $limit, page: $page) : $songs->get();
         return response()->json([
-            $limit ? $songs->paginate(perPage: $limit, page: $page) : $songs->get()
+            $songs->toResourceCollection()
         ], 200);
     }
 

@@ -24,7 +24,7 @@ class UserController extends Controller
         $users = $limit ? $users->paginate(perPage: $limit, page: $page) : $users->get();
 
         return response()->json([
-            $users
+            $users->toResourceCollection()
         ], 200);
     }
     public function store(UsersRequest $request): JsonResponse
