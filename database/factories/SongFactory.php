@@ -20,10 +20,10 @@ class SongFactory extends Factory
     public function definition(): array
     {
         return [
-            "album_id" => Album::factory()->first()->id,
+            "album_id" => Album::inRandomOrder()->first()->id,
             "genre_id" => Genre::inRandomOrder()->first()->id, // Busca o primeiro id dos generos cadastrados em ordem aleatória,
             "title" => fake()->words(4, true), // Gera e retorna uma string contendo 4 palavras, o segundo argumento, quando true retorna todas as palavras em uma única string
-            "track_number" => fake()->unique()->numberBetween(1,Album::count()),
+            "track_number" => fake()->numberBetween(1,Album::count()),
             "duration_seconds" => fake()->numberBetween(120, 300),
             "is_explicit" => fake()->boolean()
         ];

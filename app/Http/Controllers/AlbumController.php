@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class AlbumController extends Controller
 {
@@ -51,9 +52,18 @@ class AlbumController extends Controller
     {
         try {
             $validated = $request->validated();
-
+            
             Artist::findOrFail($validated["artist_id"]); // Verifica se o artista existe
             $album = Album::create($validated);
+            if($request->hasfile('cover_image')) {
+                $file = $request->file("cover_image");
+                $name ='cover_album_' . $album['id'] . '.' . $file->extension();
+                $path = Storage::putFileAs('public/', $request['cover_image'], $name);
+
+                echo $path;
+
+                // Storage::put('public/' . 'cover_album_' . $album['id'] . $file->extension(), $validated['cover_image']);
+            }
 
             return response()->json(['message' => 'Album added successfully!'], 201);
         } catch (Exception $ex) {
