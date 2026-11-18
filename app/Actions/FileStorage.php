@@ -17,20 +17,20 @@ class FileStorage
         $this->subDir = $subDir;
     }
 
-    public function store(File|UploadedFile|string $file, string $fileName) {
+    public function store(File|UploadedFile|string $file, string $fileName)
+    {
         $fs = Storage::disk($this->baseDisk);
         $path = $fs->putFileAs($this->subDir, $file, $fileName);
         $pathUrl = Storage::url($path);
         return $pathUrl;
     }
-    public function update(File|UploadedFile|string $file, string $dir) {
+    
+    public function update(File|UploadedFile|string $file, string $fileName)
+    {
         $fs = Storage::disk($this->baseDisk);
-        $path = $fs->putFile($dir, $file);
-        echo $path;
-        // $pathUrl = Storage::url($path);
-        return true;
+        $path = $fs->putFileAs($this->subDir, $file, $fileName);
+        $pathUrl = Storage::url($path);
+        return $pathUrl;
     }
-    public function retrieve() {
-
-    }
+    public function retrieve() {}
 }

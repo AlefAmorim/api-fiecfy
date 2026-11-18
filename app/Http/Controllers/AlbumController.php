@@ -59,16 +59,16 @@ class AlbumController extends Controller
     {
         try {
             $validated = $request->validated();
-            
+
             Artist::findOrFail($validated["artist_id"]); // Verifica se o artista existe
             $album = Album::create($validated);
-            if($request->hasfile('cover_image')) { 
+            if ($request->hasfile('cover_image')) {
                 $file = $request->file("cover_image");
-                $name ='cover_album_' . $album['id'] . '.' . $file->extension();
+                $name = 'cover_album_' . $album['id'] . '.' . $file->extension();
                 // $path = Storage::disk("public")->putFileAs('albums', $request['cover_image'], $name);
                 $path = $this->fileHandler->store($file, $name);
 
-                $album->update([ 'cover_image' => $path ]);
+                $album->update(['cover_image' => $path]);
             }
 
             return response()->json(['message' => 'Album added successfully!'], 201);
@@ -89,15 +89,24 @@ class AlbumController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         try {
+            $validated = $request->validate([
+                "artist_id" => "sometimes|int",
+                "release_year" => "sometimes|int",
+                "title" => "sometimes|string"
+            ]);
             $album = Album::findOrFail($id);
-            // if($request->hasFile("cover_image")){
-            //     $file = $request->file("cover_image");
-            //     $fileName = $album->cover_image;
-            //     echo $fileName;
-            //     echo "\n";
-            //     $this->fileHandler->update($file, $fileName);
-            // }
-            $album->update($request->all());
+            if ($request->hasFile("cover_image")) {
+                $file = $request->file("cover_image");
+                $fileName = 'cover_album_' . $album['id'] . '.' . $file->extension();
+                $path = $this->fileHandler->update($file, $fileName);
+                echo $path;
+                if ($path !== $album->cover_image) {
+                    $album->update([
+                        "cover_image" => $path
+                    ]);
+                }
+            }
+            $album->update($validated);
 
             return response()->json(['message' => 'Album updated successfully!'], 200);
         } catch (Exception $ex) {
