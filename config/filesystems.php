@@ -45,6 +45,9 @@ return [
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
+            'links' => [
+                public_path("storage") => storage_path('app/public')
+            ]
         ],
 
         's3' => [

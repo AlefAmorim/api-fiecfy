@@ -125,8 +125,8 @@ Route::prefix('albums')->group(function () {
 
     // Rotas com autenticação
     Route::post('/create-album', [AlbumController::class, 'store']);
+    Route::post('/update-album/{id}', [AlbumController::class, 'update']);
     Route::middleware("auth:sanctum")->group(function () {
-        Route::patch('/update-album/{id}', [AlbumController::class, 'update']);
         Route::patch('/inactivate-album/{id}', [AlbumController::class, 'inactivate']);
         Route::patch('/activate-album/{id}', [AlbumController::class, 'activate']);
         Route::delete('/delete-album/{id}', [AlbumController::class, 'destroy']);

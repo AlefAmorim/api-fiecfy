@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\FileStorage;
 use App\Http\Requests\AlbumRequest;
 use App\Models\Album;
 use App\Models\Artist;
@@ -16,6 +17,12 @@ use Illuminate\Support\Facades\Storage;
 class AlbumController extends Controller
 {
     private string $messageInternalServerError = "Internal server error!Try again later.";
+    private FileStorage $fileHandler;
+
+    public function __construct()
+    {
+        $this->fileHandler = new FileStorage("public", "albums");
+    }
 
     public function index(Request $request): JsonResponse
     {
@@ -44,7 +51,7 @@ class AlbumController extends Controller
             if ($ex instanceof ModelNotFoundException) {
                 return response()->json(['error' => 'Album not  found.'], 404);
             }
-            return response()->json(['error' => $ex->getMessage()], 500);
+            return response()->json(['error' => $this->messageInternalServerError], 500);
         }
     }
 
@@ -55,14 +62,13 @@ class AlbumController extends Controller
             
             Artist::findOrFail($validated["artist_id"]); // Verifica se o artista existe
             $album = Album::create($validated);
-            if($request->hasfile('cover_image')) {
+            if($request->hasfile('cover_image')) { 
                 $file = $request->file("cover_image");
                 $name ='cover_album_' . $album['id'] . '.' . $file->extension();
-                $path = Storage::putFileAs('public/', $request['cover_image'], $name);
+                // $path = Storage::disk("public")->putFileAs('albums', $request['cover_image'], $name);
+                $path = $this->fileHandler->store($file, $name);
 
-                echo $path;
-
-                // Storage::put('public/' . 'cover_album_' . $album['id'] . $file->extension(), $validated['cover_image']);
+                $album->update([ 'cover_image' => $path ]);
             }
 
             return response()->json(['message' => 'Album added successfully!'], 201);
@@ -76,7 +82,7 @@ class AlbumController extends Controller
             if ($ex instanceof ModelNotFoundException) {
                 return response()->json(['error' => "Albums artist not found."], 404);
             }
-            return response()->json(['error' => $this->messageInternalServerError], 500);
+            return response()->json(['error' => $ex->getMessage()], 500);
         }
     }
 
@@ -84,6 +90,13 @@ class AlbumController extends Controller
     {
         try {
             $album = Album::findOrFail($id);
+            // if($request->hasFile("cover_image")){
+            //     $file = $request->file("cover_image");
+            //     $fileName = $album->cover_image;
+            //     echo $fileName;
+            //     echo "\n";
+            //     $this->fileHandler->update($file, $fileName);
+            // }
             $album->update($request->all());
 
             return response()->json(['message' => 'Album updated successfully!'], 200);
