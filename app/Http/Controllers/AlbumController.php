@@ -99,7 +99,6 @@ class AlbumController extends Controller
                 $file = $request->file("cover_image");
                 $fileName = 'cover_album_' . $album['id'] . '.' . $file->extension();
                 $path = $this->fileHandler->update($file, $fileName);
-                echo $path;
                 if ($path !== $album->cover_image) {
                     $album->update([
                         "cover_image" => $path

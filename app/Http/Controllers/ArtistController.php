@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\FileStorage;
 use App\Http\Requests\ArtistRequest;
 use App\Models\Artist;
 use Error;
@@ -16,6 +17,12 @@ use PDOException;
 class ArtistController extends Controller
 {
     private string $messageInternalServerError = "Falha interna no servidor! Tente novamente mais tarde.";
+    private FileStorage $fileHandler;
+
+    public function __construct()
+    {
+        $this->fileHandler = new FileStorage("public", "artists");
+    }
 
     public function index(Request $request): JsonResponse
     {
@@ -53,21 +60,46 @@ class ArtistController extends Controller
         try {
             $validated = $request->validated();
             $newArtist = Artist::create($validated);
+
+            if ($request->hasFile("profile_pic_url")) {
+                $file = $request->file("profile_pic_url");
+                $name = "artist_pic_" . $newArtist["id"] . '.' . $file->extension();
+                $path = $this->fileHandler->store($file, $name);
+
+                $newArtist->update([
+                    "profile_pic_url" => $path
+                ]);
+            }
             return response()->json(['message' => 'Artist created successfully!'], 201);
         } catch (Exception $ex) {
             if ($ex->getCode() == "HY000") { // Código retornado pelo PDO ao tentar inserir um registro com um campo obrigatório faltando
                 return response()->json(['error' => "Fill the required fields."], 400);
             }
-            return response()->json(['error' => $this->messageInternalServerError], 500);
+            // return response()->json(['error' => $this->messageInternalServerError], 500);
+            return response()->json(['error' => $ex->getMessage()], 500);
         }
     }
 
     public function update(Request $request, int $id): JsonResponse
     {
         try {
+            $validated = $request->validate([
+                "name" => "sometimes|string",
+                "monthly_listeners" => "sometimes|int",
+                "genre_id" => "sometimes|int",
+            ]);
             $artist = Artist::findOrFail($id);
-
-            $artist->update($request->all());
+            if ($request->hasFile("profile_pic_url")) {
+                $file = $request->file("profile_pic_url");
+                $fileName = 'artist_pic_' . $artist['id'] . '.' . $file->extension();
+                $path = $this->fileHandler->update($file, $fileName);
+                if ($path !== $artist->profile_pic_url) {
+                    $artist->update([
+                        "profile_pic_url" => $path
+                    ]);
+                }
+            }
+            $artist->update($validated);
 
             return response()->json(['message' => "Artist updated successfully!"], 200);
         } catch (Exception $err) {

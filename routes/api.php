@@ -106,7 +106,7 @@ Route::prefix('artists')->group(function () {
     // Rotas com autenticação
     Route::middleware("auth:sanctum")->group(function () {
         Route::post("/create-artist", [ArtistController::class, 'store']);
-        Route::patch('/update-artist/{id}', [ArtistController::class, 'update']);
+        Route::post('/update-artist/{id}', [ArtistController::class, 'update']);
         Route::patch('/inactivate-artist/{id}', [ArtistController::class, 'inactivate']);
         Route::patch('/activate-artist/{id}', [ArtistController::class, 'activate']);
         Route::delete('/delete-artist/{id}', [ArtistController::class, 'destroy']);
@@ -124,9 +124,9 @@ Route::prefix('albums')->group(function () {
     Route::get('/list-album/{id}', [AlbumController::class, 'show']);
 
     // Rotas com autenticação
-    Route::post('/create-album', [AlbumController::class, 'store']);
-    Route::post('/update-album/{id}', [AlbumController::class, 'update']);
     Route::middleware("auth:sanctum")->group(function () {
+        Route::post('/create-album', [AlbumController::class, 'store']);
+        Route::post('/update-album/{id}', [AlbumController::class, 'update']);
         Route::patch('/inactivate-album/{id}', [AlbumController::class, 'inactivate']);
         Route::patch('/activate-album/{id}', [AlbumController::class, 'activate']);
         Route::delete('/delete-album/{id}', [AlbumController::class, 'destroy']);

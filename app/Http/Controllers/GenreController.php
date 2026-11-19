@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\FileStorage;
 use App\Models\Genre;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -10,6 +11,12 @@ use Illuminate\Routing\Controller;
 
 class GenreController extends Controller
 {
+    private FileStorage $fileHandler;
+
+    public function __construct()
+    {
+        $this->fileHandler = new FileStorage("public", "genres");
+    }
     public function index(Request $request): JsonResponse
     {
         $limit = $request->query("limit");
@@ -25,7 +32,19 @@ class GenreController extends Controller
             "description" => "required"
         ]);
 
-        Genre::create($validated);
+        $genre = Genre::create($validated);
+
+        if($request->hasFile("cover_image")) {
+            $file = $request->file("cover_image");
+
+            $name = "genre_cover_" . $genre["id"] . "." . $file->extension();
+            $path = $this->fileHandler($file, $name);
+
+            $genre->update([
+                "cover_image" => $path
+            ]);
+        }
+
 
         return response()->json(["message" => "Genre created successfully!"], 201);
     }
