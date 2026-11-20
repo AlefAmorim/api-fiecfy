@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\FileStorage;
 use App\Http\Requests\UsersRequest;
 use App\Models\User;
 use Exception;
@@ -13,13 +14,18 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    //
+    private FileStorage $fileHandler;
+
+    public function __construct()
+    {
+        $this->fileHandler = new FileStorage("public", "users");
+    }
     public function index(Request $request): JsonResponse
     {
         $limit = $request->query("limit");
         $page = $request->query("page");
         $term = $request->query("term");
-        $users = User::where("name", "like", "%".$term."%");
+        $users = User::where("name", "like", "%" . $term . "%");
 
         $users = $limit ? $users->paginate(perPage: $limit, page: $page) : $users->get();
 
@@ -42,19 +48,18 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        $validated = $request->validate([
-            "pic_url" => "required|mimes:jpeg,png,gif,pdf,doc,docx|max:5000"
-        ]);
+        // $validated = $request->validate([
+        //     "pic_url" => "required|mimes:jpeg,png,gif,webp|max:5000"
+        // ]);
 
-        if ($request->hasFile("pic_url")) {
-            $file = $request->file("pic_url");
-            $nomeImg = time() . "-" . $file->getClientOriginalName();
+        if ($request->hasFile("profile_pic")) {
+            $file = $request->file("profile_pic");
+            $nomeImg = "profile_pic_" . $user->id . "." . $file->extension();
+            $path = $this->fileHandler->store($file, $nomeImg);
 
-            $file->move(public_path('img/perfil'), $nomeImg);
-
-            $validated['pic_url'] = 'img/perfil/' . $nomeImg;
-
-            $user->update($validated);
+            $user->update([
+                "pic_url" => $path
+            ]);
 
             return response()->json([
                 "mensagem" => "Image updated successfully!",

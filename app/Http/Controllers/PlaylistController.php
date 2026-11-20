@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\FileStorage;
 use App\Http\Requests\PlaylistRequest;
 use App\Models\Playlist;
 use Exception;
@@ -13,6 +14,13 @@ use Illuminate\Routing\Controller;
 
 class PlaylistController extends Controller
 {
+    private FileStorage $fileHandler;
+
+    public function __construct()
+    {
+        $this->fileHandler =  new FileStorage("public", "playlists");
+    }
+
     public function index(Request $request): JsonResponse
     {
         $limit = $request->query("limit");
@@ -39,7 +47,7 @@ class PlaylistController extends Controller
         $page = $request->query("page");
         $playlists = Playlist::with("songs")->where("public", "=", true);
         $playlists = $limit ? $playlists->paginate(perPage: $limit, page: $page) : $playlists->get();
-        
+
 
         return response()->json([
             $playlists->toResourceCollection()
@@ -51,7 +59,15 @@ class PlaylistController extends Controller
         try {
             $validated = $request->validated();
             $playlist = Playlist::create($validated);
-            $nome = $playlist->name;
+
+            if ($request->hasFile("picture_url")) {
+                $file = $request->file("picture_url");
+                $fileName = "playlist_pic_" . $playlist["id"] . "." . $file->extension();
+                $path = $this->fileHandler->store($file, $fileName);
+                $playlist->update([
+                    "picture_url" => $path
+                ]);
+            }
 
             return response()->json([
                 'message' => "Playlist created successfully!"
@@ -87,11 +103,22 @@ class PlaylistController extends Controller
 
         if (!count($validated)) {
             return response()->json([
-                "message" => "Fill the field to update."
+                "message" => "Fill the fields to update."
             ], 400);
         }
 
         $playlist = Playlist::findOrFail($id);
+
+        if ($request->hasFile("picture_url")) {
+            $file = $request->file("picture_url");
+            $fileName = "playlist_pic_" . $playlist["id"] . "." . $file->extension();
+            $path = $this->fileHandler->update($file, $fileName);
+            if ($path !== $playlist->picture_url) {
+                $playlist->update([
+                    "picture_url" => $path
+                ]);
+            }
+        }
 
         $playlist->update($validated);
 

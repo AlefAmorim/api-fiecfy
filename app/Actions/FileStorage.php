@@ -32,5 +32,7 @@ class FileStorage
         $pathUrl = Storage::url($path);
         return $pathUrl;
     }
-    public function retrieve() {}
+    public function delete(string $fileName) {
+        return Storage::delete($fileName);
+    }
 }

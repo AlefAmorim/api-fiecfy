@@ -34,11 +34,11 @@ class GenreController extends Controller
 
         $genre = Genre::create($validated);
 
-        if($request->hasFile("cover_image")) {
+        if ($request->hasFile("cover_image")) {
             $file = $request->file("cover_image");
 
             $name = "genre_cover_" . $genre["id"] . "." . $file->extension();
-            $path = $this->fileHandler($file, $name);
+            $path = $this->fileHandler->store($file, $name);
 
             $genre->update([
                 "cover_image" => $path
@@ -86,6 +86,17 @@ class GenreController extends Controller
         ]);
 
         $genre = Genre::findOrFail($id);
+        if ($request->hasFile("cover_image")) {
+            $file = $request->file("cover_image");
+            $fileName = "genre_cover_" . $genre["id"] . "." . $file->extension();
+            $path = $this->fileHandler->update($file, $fileName);
+            if ($path !== $genre->cover_image) {
+                $genre->update([
+                    "cover_image" => $path
+                ]);
+            }
+        }
+
         $genre->update($validated);
 
         return response()->json(["message" => "Genre updated successfully!"], 200);

@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
  * Rotas para autenticação
  * 
  */
+
 Route::prefix("auth")->group(function () {
     Route::post("/register", [AuthController::class, "register"]);
     Route::post("/login", [AuthController::class, "login"]);
@@ -66,11 +67,11 @@ Route::prefix('playlists')->group(function () {
         Route::get('/list-playlists', [PlaylistController::class, 'index']);
         Route::get('/list-playlists-user', [PlaylistController::class, 'listPlaylistsUser']);
         Route::post('/create-playlist', [PlaylistController::class, 'store']);
-        Route::post('/add-song/{id}', [PlaylistController::class, 'addSong']);
-        Route::patch('/update-song/{id}', [PlaylistController::class, 'update']);
+        Route::post('/add-song-playlist/{id}', [PlaylistController::class, 'addSong']);
+        Route::patch('/update-playlist/{id}', [PlaylistController::class, 'update']);
         Route::patch('/inactivate-playlist/{id}', [PlaylistController::class, 'inactivate']);
         Route::patch('/activate-playlist/{id}', [PlaylistController::class, 'activate']);
-        Route::delete('/delete/{id}', [PlaylistController::class, 'destroy']);
+        Route::delete('/delete-playlist/{id}', [PlaylistController::class, 'destroy']);
     });
 });
 
@@ -86,10 +87,10 @@ Route::prefix('genres')->group(function () {
     // Rotas com autenticação
     Route::middleware("auth:sanctum")->group(function () {
         Route::post('/create-genre', [GenreController::class, 'store']);
-        Route::patch('/update-song/{id}', [GenreController::class, 'update']);
-        Route::patch('/inactivate-playlist/{id}', [GenreController::class, 'inactivate']);
-        Route::patch('/activate-playlist/{id}', [GenreController::class, 'activate']);
-        Route::delete('/delete/{id}', [GenreController::class, 'destroy']);
+        Route::post('/update-genre/{id}', [GenreController::class, 'update']);
+        Route::patch('/inactivate-genre/{id}', [GenreController::class, 'inactivate']);
+        Route::patch('/activate-genre/{id}', [GenreController::class, 'activate']);
+        Route::delete('/delete-genre/{id}', [GenreController::class, 'destroy']);
     });
 });
 

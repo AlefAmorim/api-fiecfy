@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\FileStorage;
 use App\Http\Requests\SongsRequest;
 use App\Models\Album;
 use App\Models\Song;
@@ -14,6 +15,13 @@ use Illuminate\Routing\Controller;
 
 class SongsController extends Controller
 {
+    private FileStorage $fileHandler;
+
+    public function __construct()
+    {
+        $this->fileHandler = new FileStorage("public", "songs");
+    }
+
     public function index(Request $request): JsonResponse
     {
         $limit = $request->query("limit");
@@ -42,6 +50,16 @@ class SongsController extends Controller
             }
 
             $song = Song::create($validated);
+            if ($request->hasFile("audio")) {
+                $file = $request->file("audio");
+                $fileName = "songs_audio_" . $song["id"] . "." . $file->extension();
+                $path = $this->fileHandler->store($file, $fileName);
+
+                $song->update([
+                    'audio_path' => $path
+                ]);
+            }
+
             return response()->json(["message" => "Song created successfully!"], 201);
         } catch (Exception $e) {
             if ($e instanceof ModelNotFoundException) {
