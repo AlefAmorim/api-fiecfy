@@ -6,9 +6,11 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\AuthRequest;
+use App\Mail\WelcomeMail;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -17,7 +19,7 @@ class AuthController extends Controller
         $validated = $request->validated();
         $validated["password"] = Hash::make($validated["password"]);
         $user = User::create($validated);
-
+        Mail::to($user, $user->name)->send(new WelcomeMail($user->name));
         return response()->json([
             "menssge" => "Register made successfully!",
             "data" => $user
