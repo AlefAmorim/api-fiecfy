@@ -26,9 +26,12 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function login(AuthRequest $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
-        $credentials = $request->safe()->only(["email", "password"]); 
+        $credentials = $request->validate([
+            "email" => "required|email",
+            "password" => "required|min:8"
+        ]); 
 
         if (!Auth::attempt($credentials)) {
             return response()->json(['error' => "Email or password wrong!"], 400);
