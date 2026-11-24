@@ -28,11 +28,11 @@ Route::prefix("auth")->group(function () {
  * Rotas para manipulação dos usuários
  * 
  */
-Route::prefix("users")->group(function () {
+Route::middleware("auth:sanctum")->prefix("users")->group(function () {
     Route::post("/upload", [UserController::class, "upload"]);
     Route::post("/create-user", [UserController::class, "store"]);
     Route::get("/show-users", [UserController::class, "index"]);
-})->middleware("auth:sanctum");
+});//->middleware("auth:sanctum");
 
 /*
  * 

@@ -55,6 +55,9 @@ class AuthController extends Controller
     }
     public function me(Request $request)
     {
-        return $request->user()->toResource();
+        $user = $request->user()->toResource();
+            return response()->json([
+                "data" => $user
+            ], 200);    
     }
 }

@@ -16,7 +16,7 @@ return [
     */
 
     // As rotas em que os CORS serão aplicados
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'storage/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'], // Métodos permitidos
 

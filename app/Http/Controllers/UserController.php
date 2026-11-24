@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
@@ -47,14 +48,9 @@ class UserController extends Controller
     public function upload(Request $request): JsonResponse
     {
         $user = $request->user();
-
-        // $validated = $request->validate([
-        //     "pic_url" => "required|mimes:jpeg,png,gif,webp|max:5000"
-        // ]);
-
         if ($request->hasFile("profile_pic")) {
             $file = $request->file("profile_pic");
-            $nomeImg = "profile_pic_" . $user->id . "." . $file->extension();
+            $nomeImg = "profile_pic_" . $user["id"] . "." . $file->extension();
             $path = $this->fileHandler->store($file, $nomeImg);
 
             $user->update([
