@@ -12,10 +12,10 @@ class Genre extends Model
     protected $fillable = ["name", "description", "cover_image"];
 
     public function song(){
-        return $this->belongsToMany(Song::class);
+        return $this->hasOne(Song::class);
     }
 
     public function artist(){
-        return $this->belongsToMany(Artist::class);
+        return $this->hasOne(Artist::class);
     }
 }

@@ -13,7 +13,7 @@ class Artist extends Model
 
     //Métodos de manipulação da entidade no banco são herdadas da classe Model do Eloquent
     public function genre() {
-        return $this->hasOne(Genre::class);
+        return $this->belongsTo(Genre::class);
     }
 
     public function albums() {
