@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("name")->unique();
             $table->text("description")->nullable();
             $table->text("cover_image")->nullable();
+            $table->text("hex_cover_bg")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

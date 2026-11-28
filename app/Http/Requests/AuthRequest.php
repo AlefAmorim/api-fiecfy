@@ -25,7 +25,7 @@ class AuthRequest extends FormRequest
         return [
             "name" => "required|string",
             "email" => "required|string|email",
-            "password" => "required|string|min:8"
+            "password" => "required|string|min:8|regex:/([A-Z]){1,}([a-z]){1,}([\W_\-#]){1,}(\d){1,}/"
         ];
     }
 }

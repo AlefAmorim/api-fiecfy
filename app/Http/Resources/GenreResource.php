@@ -19,6 +19,7 @@ class GenreResource extends JsonResource
             "name" => $this->name,
             "description" => $this->description,
             "cover_image" => $this->cover_image,
+            "hex_cover_bg" => $this->hex_cover_bg,
         ];
     }
 }
